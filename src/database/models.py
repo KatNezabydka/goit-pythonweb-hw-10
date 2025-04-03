@@ -36,3 +36,4 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String)
     created_at: Mapped[DateTime] = mapped_column(DateTime, default=func.now())
     avatar: Mapped[str] = mapped_column(String(255), nullable=True)
+    contacts: Mapped[list["Contact"]] = relationship("Contact", back_populates="user", cascade="all, delete")

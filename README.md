@@ -9,7 +9,8 @@ Before you start, make sure you have:
 
 ## Start with docker
 ```bash
-make docker compose up -d
+docker compose build --no-cache
+docker compose up -d
 make migrate
 ```
 

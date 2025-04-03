@@ -38,6 +38,8 @@ class UserCreate(BaseModel):
     email: str
     password: str
 
+    model_config = ConfigDict(from_attributes=True)
+
 
 class Token(BaseModel):
     access_token: str

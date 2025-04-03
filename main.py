@@ -1,9 +1,22 @@
-from fastapi import FastAPI
 from src.api import utils, contacts, auth, users
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.openapi.utils import get_openapi
 
+from fastapi import FastAPI, Request, status
+from starlette.responses import JSONResponse
+from slowapi.errors import RateLimitExceeded
+
 app = FastAPI()
+
+
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    return JSONResponse(
+        status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+        content={"error": "Request limit exceeded. Please try again later."},
+    )
+
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
@@ -29,6 +42,7 @@ def custom_openapi():
                 method["security"] = [{"BearerAuth": []}]
     app.openapi_schema = openapi_schema
     return openapi_schema
+
 
 app.openapi = custom_openapi
 

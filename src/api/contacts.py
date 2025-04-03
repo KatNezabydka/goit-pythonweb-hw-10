@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.db import get_db
@@ -10,6 +11,8 @@ from src.services.auth import get_current_user
 from src.services.contacts import ContactService
 
 router = APIRouter(prefix="/contacts", tags=["contacts"])
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 @router.get("/", response_model=List[ContactResponse])
@@ -73,7 +76,7 @@ async def create_contact(
 
 
 @router.put("/{contact_id}", response_model=ContactResponse)
-async def update_note(
+async def update_contact(
         body: ContactUpdate,
         contact_id: int, db:
         AsyncSession = Depends(get_db),
@@ -89,7 +92,7 @@ async def update_note(
 
 
 @router.delete("/{contact_id}", response_model=ContactResponse)
-async def remove_note(
+async def remove_contact(
         contact_id: int,
         db: AsyncSession = Depends(get_db),
         user: User = Depends(get_current_user),

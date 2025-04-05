@@ -8,9 +8,9 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRATION_SECONDS: int = Field(default=3600)
 
-    MAIL_USERNAME: EmailStr = "katorifmmm@meta.ua"
-    MAIL_PASSWORD: str = "KatOrif30"
-    MAIL_FROM: EmailStr = "katorifmmm@meta.ua"
+    MAIL_USERNAME: EmailStr
+    MAIL_PASSWORD: str
+    MAIL_FROM: EmailStr
     MAIL_PORT: int = 465
     MAIL_SERVER: str = "smtp.meta.ua"
     MAIL_FROM_NAME: str = "Rest API Service"
@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     MAIL_SSL_TLS: bool = True
     USE_CREDENTIALS: bool = True
     VALIDATE_CERTS: bool = True
+
+    CLD_NAME: str
+    CLD_API_KEY: int
+    CLD_API_SECRET: str
 
     model_config = SettingsConfigDict(
         env_file=".env",

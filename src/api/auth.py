@@ -7,7 +7,6 @@ from src.services.users import UserService
 from src.database.db import get_db
 from src.services.email import send_email
 
-
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
@@ -80,15 +79,22 @@ async def confirmed_email(token: str, db: AsyncSession = Depends(get_db), ):
     await user_service.confirmed_email(email)
     return {"message": "Email Verified"}
 
+
 @router.post("/request_email")
 async def request_email(
-    body: RequestEmail,
-    background_tasks: BackgroundTasks,
-    request: Request,
-    db: AsyncSession = Depends(get_db)
+        body: RequestEmail,
+        background_tasks: BackgroundTasks,
+        request: Request,
+        db: AsyncSession = Depends(get_db)
 ):
     user_service = UserService(db)
     user = await user_service.get_user_by_email(body.email)
+
+    if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail="User with this email does not exist"
+        )
 
     if user.confirmed:
         return {"message": "Your email is already confirmed"}
@@ -97,4 +103,3 @@ async def request_email(
             send_email, user.email, user.username, request.base_url
         )
     return {"message": "Please check your email for verification"}
-

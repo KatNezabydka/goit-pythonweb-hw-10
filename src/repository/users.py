@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.database.models import User
 from src.schemas import UserCreate
 
+
 class UserRepository:
     def __init__(self, session: AsyncSession):
         self.db = session
@@ -33,3 +34,8 @@ class UserRepository:
         await self.db.commit()
         await self.db.refresh(user)
         return user
+
+    async def confirmed_email(self, email: str) -> None:
+        user = await self.get_user_by_email(email)
+        user.confirmed = True
+        await self.db.commit()

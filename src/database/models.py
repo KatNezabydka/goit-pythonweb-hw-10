@@ -1,7 +1,7 @@
 from sqlalchemy import Integer, String, Date, func
 from sqlalchemy.orm import relationship, mapped_column, Mapped, DeclarativeBase
 from sqlalchemy.sql.schema import Index
-from sqlalchemy.sql.sqltypes import DateTime
+from sqlalchemy.sql.sqltypes import DateTime, Boolean
 from sqlalchemy.sql.schema import ForeignKey
 
 
@@ -36,4 +36,5 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String)
     created_at: Mapped[DateTime] = mapped_column(DateTime, default=func.now())
     avatar: Mapped[str] = mapped_column(String(255), nullable=True)
+    confirmed = mapped_column(Boolean, default=False)
     contacts: Mapped[list["Contact"]] = relationship("Contact", back_populates="user", cascade="all, delete")
